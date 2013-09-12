@@ -70,6 +70,9 @@
     <Compile Include="..\CreateTableTest.cs">
       <Link>CreateTableTest.cs</Link>
     </Compile>
+    <Compile Include="..\DateTimeOffsetTest.cs">
+      <Link>DateTimeOffsetTest.cs</Link>
+    </Compile>
     <Compile Include="..\DateTimeTest.cs">
       <Link>DateTimeTest.cs</Link>
     </Compile>
