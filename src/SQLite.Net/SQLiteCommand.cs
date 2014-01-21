@@ -157,7 +157,10 @@ namespace SQLite.Net
                 if (r == Result.Row)
                 {
                     ColType colType = _sqlitePlatform.SQLiteApi.ColumnType(stmt, 0);
-                    val = (T) ReadCol(stmt, 0, colType, typeof (T));
+                    if (colType != ColType.Null)
+                    {
+                        val = (T) ReadCol(stmt, 0, colType, typeof (T));
+                    }
                 }
                 else if (r == Result.Done)
                 {
