@@ -109,6 +109,9 @@
     <Compile Include="..\MigrationTest.cs">
       <Link>MigrationTest.cs</Link>
     </Compile>
+    <Compile Include="..\NotNullAttributeTest.cs">
+      <Link>NotNullAttributeTest.cs</Link>
+    </Compile>
     <Compile Include="..\NullableTest.cs">
       <Link>NullableTest.cs</Link>
     </Compile>

@@ -144,5 +144,12 @@ namespace SQLite.Net
             }
             return DefaultMaxStringLength;
         }
+
+        public static bool IsMarkedNotNull(MemberInfo p)
+        {
+            object[] attrs = p.GetCustomAttributes(typeof(NotNullAttribute), true);
+            return attrs.Length > 0;
+        }
+
     }
 }
