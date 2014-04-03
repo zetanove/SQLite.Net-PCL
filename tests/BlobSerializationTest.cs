@@ -12,6 +12,7 @@ using SQLite.Net.Platform.XamarinIOS;
 #elif WINDOWS_PHONE
 using SQLite.Net.Platform.WindowsPhone8;
 using Windows.Storage;
+using SQLitePlatform = SQLite.Net.Platform.WindowsPhone8.SQLitePlatformWP8;
 #else
 using SQLitePlatform = SQLite.Net.Platform.Win32.SQLitePlatformWin32;
 #endif
@@ -20,6 +21,7 @@ using SQLitePlatform = SQLite.Net.Platform.Win32.SQLitePlatformWin32;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using TestFixture = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestClassAttribute;
 using Test = Microsoft.VisualStudio.TestPlatform.UnitTestFramework.TestMethodAttribute;
+using SQLite.Net.Attributes;
 #else
 using NUnit.Framework;
 using SQLite.Net.Interop;
@@ -284,10 +286,13 @@ namespace SQLite.Net.Tests
             {
                 db.CreateTable<ComplexOrder>();
             }
-
+#if WINDOWS_PHONE
+            CollectionAssert.Contains(types, typeof(List<ComplexHistory>));
+            CollectionAssert.Contains(types, typeof(List<ComplexLine>));
+#else
             Assert.Contains(typeof(List<ComplexHistory>), types);
             Assert.Contains(typeof(List<ComplexLine>), types);
-
+#endif
             Assert.AreEqual(2, types.Count, "Too many types requested by serializer");
         }
 
@@ -324,9 +329,11 @@ namespace SQLite.Net.Tests
             {
                 db.CreateTable<UnsupportedTypes>();
             }
-
+#if WINDOWS_PHONE
+            CollectionAssert.Contains(types, typeof(DateTimeOffset));
+#else
             Assert.Contains(typeof(DateTimeOffset), types);
-
+#endif
             Assert.AreEqual(1, types.Count, "Too many types requested by serializer");
         }
 
