@@ -10,7 +10,8 @@ namespace SQLite.Net.Platform.WindowsPhone71
     {
         public void Write(ref int transactionDepth, int depth)
         {
-            throw new NotImplementedException();
+            //TODO ?
+            transactionDepth = depth;
         }
     }
 }
