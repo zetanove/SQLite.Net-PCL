@@ -2,18 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
-#if __ANDROID__
-using SQLite.Net.Platform.XamarinAndroid;
-#elif __IOS__
-using SQLite.Net.Platform.XamarinIOS;
+#if __WIN32__
+using SQLitePlatformTest = SQLite.Net.Platform.Win32.SQLitePlatformWin32;
 #elif WINDOWS_PHONE
-using SQLite.Net.Platform.WindowsPhone8;
-using Windows.Storage;
+using SQLitePlatformTest = SQLite.Net.Platform.WindowsPhone8.SQLitePlatformWP8;
+#elif __WINRT__
+using SQLitePlatformTest = SQLite.Net.Platform.WinRT.SQLitePlatformWinRT;
+#elif __IOS__
+using SQLitePlatformTest = SQLite.Net.Platform.XamarinIOS.SQLitePlatformIOS;
+#elif __ANDROID__
+using SQLitePlatformTest = SQLite.Net.Platform.XamarinAndroid.SQLitePlatformAndroid;
 #else
-using SQLitePlatform = SQLite.Net.Platform.Win32.SQLitePlatformWin32;
+using SQLitePlatformTest = SQLite.Net.Platform.Generic.SQLitePlatformGeneric;
 #endif
 
 #if WINDOWS_PHONE
@@ -36,19 +39,11 @@ namespace SQLite.Net.Tests
 
         public class BlobDatabase : SQLiteConnection
         {
-#if WINDOWS_PHONE
             public BlobDatabase(IBlobSerializer serializer) :
-                base(new SQLitePlatformWP8(), TestPath.GetTempFileName(), false, serializer)
+                base(new SQLitePlatformTest(), TestPath.GetTempFileName(), false, serializer)
             {
                 DropTable<ComplexOrder>();
             }
-#else
-            public BlobDatabase(IBlobSerializer serializer) :
-                base(new SQLitePlatform(), TestPath.GetTempFileName(), false, serializer)
-            {
-                DropTable<ComplexOrder>();
-            }
-#endif
         }
 
         public class ComplexOrder : IEquatable<ComplexOrder>
@@ -187,10 +182,7 @@ namespace SQLite.Net.Tests
         {
             if (!this.Serializer.CanDeserialize(typeof(ComplexOrder)))
             {
-#if WINDOWS_PHONE
-#else
                 Assert.Ignore("Serialize does not support this data type");
-#endif
             }
 
             using (var db = new BlobDatabase(this.Serializer))
@@ -207,7 +199,7 @@ namespace SQLite.Net.Tests
         {
             if (!this.Serializer.CanDeserialize(typeof(ComplexOrder)))
             {
-                //Assert.Ignore("Serialize does not support this data type");
+                Assert.Ignore("Serialize does not support this data type");
             }
 
             using (var db = new BlobDatabase(this.Serializer))
@@ -281,7 +273,6 @@ namespace SQLite.Net.Tests
             }
         }
 
-#if !WINDOWS_PHONE
         [Test]
         public void CanDeserializeIsRequested()
         {
@@ -298,12 +289,12 @@ namespace SQLite.Net.Tests
                 db.CreateTable<ComplexOrder>();
             }
 
-            Assert.Contains(typeof(List<ComplexHistory>), types);
-            Assert.Contains(typeof(List<ComplexLine>), types);
+            Assert.That(types, Has.Member(typeof (List<ComplexHistory>)));
+            Assert.That(types, Has.Member(typeof (List<ComplexLine>)));
 
             Assert.AreEqual(2, types.Count, "Too many types requested by serializer");
         }
-#endif
+
         [Test]
         public void DoesNotCallOnSupportedTypes()
         {
@@ -337,9 +328,9 @@ namespace SQLite.Net.Tests
             {
                 db.CreateTable<UnsupportedTypes>();
             }
-#if !WINDOWS_PHONE
-            Assert.Contains(typeof(DateTimeOffset), types);
-#endif
+
+            Assert.That(types, Has.Member(typeof (DateTimeOffset)));
+
             Assert.AreEqual(1, types.Count, "Too many types requested by serializer");
         }
 

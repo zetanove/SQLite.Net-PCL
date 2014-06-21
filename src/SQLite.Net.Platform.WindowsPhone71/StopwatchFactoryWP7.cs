@@ -44,7 +44,9 @@ namespace SQLite.Net.Platform.WindowsPhone71
 
             public long ElapsedMilliseconds
             {
-                get { return DateTime.Now.Ticks - startTicks; }
+                get { 
+                    return DateTime.Now.Ticks - startTicks; 
+                }
             }
         }
     }

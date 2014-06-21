@@ -17,7 +17,7 @@ namespace Stocks.CommandLine
 
 		void Initialize ()
 		{
-			var dbPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "Stocks.db");
+			var dbPath = Path.Combine ( Environment.CurrentDirectory, "Stocks.db");
 			_db = new Database (dbPath);
 		}
 
