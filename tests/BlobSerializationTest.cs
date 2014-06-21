@@ -36,11 +36,19 @@ namespace SQLite.Net.Tests
 
         public class BlobDatabase : SQLiteConnection
         {
+#if WINDOWS_PHONE
+            public BlobDatabase(IBlobSerializer serializer) :
+                base(new SQLitePlatformWP8(), TestPath.GetTempFileName(), false, serializer)
+            {
+                DropTable<ComplexOrder>();
+            }
+#else
             public BlobDatabase(IBlobSerializer serializer) :
                 base(new SQLitePlatform(), TestPath.GetTempFileName(), false, serializer)
             {
                 DropTable<ComplexOrder>();
             }
+#endif
         }
 
         public class ComplexOrder : IEquatable<ComplexOrder>
@@ -179,7 +187,10 @@ namespace SQLite.Net.Tests
         {
             if (!this.Serializer.CanDeserialize(typeof(ComplexOrder)))
             {
+#if WINDOWS_PHONE
+#else
                 Assert.Ignore("Serialize does not support this data type");
+#endif
             }
 
             using (var db = new BlobDatabase(this.Serializer))
@@ -196,7 +207,7 @@ namespace SQLite.Net.Tests
         {
             if (!this.Serializer.CanDeserialize(typeof(ComplexOrder)))
             {
-                Assert.Ignore("Serialize does not support this data type");
+                //Assert.Ignore("Serialize does not support this data type");
             }
 
             using (var db = new BlobDatabase(this.Serializer))
@@ -270,6 +281,7 @@ namespace SQLite.Net.Tests
             }
         }
 
+#if !WINDOWS_PHONE
         [Test]
         public void CanDeserializeIsRequested()
         {
@@ -291,7 +303,7 @@ namespace SQLite.Net.Tests
 
             Assert.AreEqual(2, types.Count, "Too many types requested by serializer");
         }
-
+#endif
         [Test]
         public void DoesNotCallOnSupportedTypes()
         {
@@ -325,9 +337,9 @@ namespace SQLite.Net.Tests
             {
                 db.CreateTable<UnsupportedTypes>();
             }
-
+#if !WINDOWS_PHONE
             Assert.Contains(typeof(DateTimeOffset), types);
-
+#endif
             Assert.AreEqual(1, types.Count, "Too many types requested by serializer");
         }
 

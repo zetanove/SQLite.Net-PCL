@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +11,7 @@ using SQLite.Net.Attributes;
 
 #if __WIN32__
 using SQLitePlatformTest=SQLite.Net.Platform.Win32.SQLitePlatformWin32;
+using System.Collections.Concurrent;
 #elif NETFX_CORE
 using SQLitePlatformTest = SQLite.Net.Platform.WinRT.SQLitePlatformWinRT;
 #elif WINDOWS_PHONE
@@ -163,6 +164,7 @@ namespace SQLite.Net.Tests
             Assert.AreEqual(customer.Id, loaded.Id);
         }
 
+#if NETFX_CORE
         [Test]
         public async Task StressAsync()
         {
@@ -211,7 +213,7 @@ namespace SQLite.Net.Tests
             Assert.AreEqual(0, errors.Count);
             Assert.AreEqual(n, count);
         }
-
+#endif
         [Test]
         public async Task TestAsyncGetWithExpression()
         {
