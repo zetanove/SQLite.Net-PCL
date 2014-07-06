@@ -333,6 +333,22 @@ namespace SQLite.Net.Async
             }, CancellationToken.None, _taskCreationOptions, _taskScheduler ?? TaskScheduler.Default);
         }
 
+        public Task<int> UpdateAllAsync(IEnumerable items)
+        {
+            if (items == null)
+            {
+                throw new ArgumentNullException("items");
+            }
+            return Task.Factory.StartNew(() =>
+            {
+                var conn = GetConnection();
+                using (conn.Lock())
+                {
+                    return conn.UpdateAll(items);
+                }
+            }, CancellationToken.None, _taskCreationOptions, _taskScheduler ?? TaskScheduler.Default);
+        }
+
         public Task<int> InsertOrReplaceAllAsync(IEnumerable items)
         {
             if (items == null)

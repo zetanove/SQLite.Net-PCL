@@ -59,7 +59,7 @@
     </Reference>
     <Reference Include="Community.CsharpSqlite.WinPhone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\wp7\Community.CsharpSqlite.WinPhone.dll</HintPath>
+      <HintPath>..\..\..\Esselunga\DLL\Community.CsharpSqlite.WinPhone.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />

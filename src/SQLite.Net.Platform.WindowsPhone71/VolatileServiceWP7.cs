@@ -10,12 +10,17 @@ namespace SQLite.Net.Platform.WindowsPhone71
 {
     class VolatileServiceWP7: IVolatileService
     {
+        private object _lockObj = new object();
+ 
         public void Write(ref int transactionDepth, int depth)
         {
-            //TODO ?
-            Thread.MemoryBarrier();
-            transactionDepth = depth;
-            Debug.WriteLine("Volatile.Write({0},{1}", transactionDepth, depth);
+            lock (_lockObj)
+            {
+                //TODO ?
+                Thread.MemoryBarrier();
+                transactionDepth = depth;
+                Debug.WriteLine("Volatile.Write({0},{1}", transactionDepth, depth);
+            }
         }
     }
 }
